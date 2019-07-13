@@ -1,0 +1,27 @@
+before:
+  hooks:
+  - go mod download
+builds:
+  - env:
+    - CGO_ENABLED=0
+    binary: bin/{{ .ProjectName }}
+
+checksum:
+  name_template: 'checksums.txt'
+
+archive:
+  format: tar.gz
+  files:
+  - LICENSE
+  - README.md
+  - CHANGELOG.md
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
