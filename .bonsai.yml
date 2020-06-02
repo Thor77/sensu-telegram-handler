@@ -48,4 +48,3 @@
     filter:
     -  "entity.system.os == 'windows'"
     -  "entity.system.arch == 'amd64'"
-  
