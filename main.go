@@ -5,10 +5,9 @@ import (
 	"errors"
 	"text/template"
 
-        "github.com/sensu-community/sensu-plugin-sdk/sensu"
-        "github.com/sensu/sensu-go/types"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-
+	"github.com/sensu-community/sensu-plugin-sdk/sensu"
+	"github.com/sensu/sensu-go/types"
 )
 
 // Config holds configuration data for the handler
@@ -21,8 +20,8 @@ type Config struct {
 
 var config = Config{
 	PluginConfig: sensu.PluginConfig{
-		Name:  "sensu-telegram-handler",
-		Short: "Sensu Go handler for sending telegram notifications",
+		Name:     "sensu-telegram-handler",
+		Short:    "Sensu Go handler for sending telegram notifications",
 		Keyspace: "sensu.io/plugins/sensu-telegram-handler/config",
 	},
 }
