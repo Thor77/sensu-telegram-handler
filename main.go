@@ -5,16 +5,17 @@ import (
 	"errors"
 	"text/template"
 
+        "github.com/sensu-community/sensu-plugin-sdk/sensu"
+        "github.com/sensu/sensu-go/types"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	corev2 "github.com/sensu/sensu-go/api/core/v2"
-	"github.com/sensu/sensu-plugins-go-library/sensu"
+
 )
 
 // Config holds configuration data for the handler
 type Config struct {
 	sensu.PluginConfig
 	APIToken        string
-	ChatID          uint64
+	ChatID          int64
 	MessageTemplate string
 }
 
@@ -22,11 +23,12 @@ var config = Config{
 	PluginConfig: sensu.PluginConfig{
 		Name:  "sensu-telegram-handler",
 		Short: "Sensu Go handler for sending telegram notifications",
+		Keyspace: "sensu.io/plugins/sensu-telegram-handler/config",
 	},
 }
 
 // handler options
-const defaultMessageTemplate = "**{{.Entity.Name}}/{{.Check.Name}}**: {{.Check.State}}\n`{{.Check.Output}}`"
+const defaultMessageTemplate = "*{{.Entity.Name}}/{{.Check.Name}}*: {{.Check.State}}\n`{{.Check.Output}}`"
 
 var options = []*sensu.PluginConfigOption{
 	{
@@ -34,31 +36,33 @@ var options = []*sensu.PluginConfigOption{
 		Argument:  "api-token",
 		Shorthand: "a",
 		Default:   "",
-		Usage:     "",
+		Usage:     "The API token to use when connecting to the Telegram service",
 		Value:     &config.APIToken,
 	},
 	{
 		Path:      "chatid",
 		Argument:  "chatid",
 		Shorthand: "c",
-		Default:   uint64(0),
+		Default:   int64(0),
+		Usage:     "The Chat ID to use when connecting to the Telegram service",
 		Value:     &config.ChatID,
 	},
 	{
 		Path:      "template",
 		Argument:  "template",
 		Shorthand: "t",
+		Usage:     "The default message template",
 		Default:   defaultMessageTemplate,
 		Value:     &config.MessageTemplate,
 	},
 }
 
 func main() {
-	telegramHandler := sensu.NewGoHandler(&config.PluginConfig, options, validateArgs, sendNotification)
+	telegramHandler := sensu.NewGoHandler(&config.PluginConfig, options, checkArgs, executeHandler)
 	telegramHandler.Execute()
 }
 
-func validateArgs(_ *corev2.Event) error {
+func checkArgs(_ *types.Event) error {
 	if config.APIToken == "" {
 		return errors.New("missing api token")
 	}
@@ -68,7 +72,7 @@ func validateArgs(_ *corev2.Event) error {
 	return nil
 }
 
-func sendNotification(event *corev2.Event) error {
+func executeHandler(event *types.Event) error {
 	// initialize bot
 	bot, err := tgbotapi.NewBotAPI(config.APIToken)
 	if err != nil {
