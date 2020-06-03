@@ -90,7 +90,7 @@ func executeHandler(event *types.Event) error {
 	}
 
 	// send message
-	message := tgbotapi.NewMessage(int64(config.ChatID), text.String())
+	message := tgbotapi.NewMessage(config.ChatID, text.String())
 	message.ParseMode = tgbotapi.ModeMarkdown
 	_, err = bot.Send(message)
 	if err != nil {
