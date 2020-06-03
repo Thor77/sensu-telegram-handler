@@ -6,6 +6,10 @@ and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+### Added
+
+## [0.2.0] - 2020-06-03
 
 ### Changed
 - Updated to use new community SDK and standards based on it for handlers
