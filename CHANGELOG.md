@@ -9,6 +9,12 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 ### Changed
 ### Added
 
+## [0.2.1] - 2021-11-04
+
+### Changed
+- Updated dependencies
+- Fixed import path for sensu plugin sdk
+
 ## [0.2.0] - 2020-06-03
 
 ### Changed

@@ -6,8 +6,8 @@ import (
 	"text/template"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/sensu-community/sensu-plugin-sdk/sensu"
 	"github.com/sensu/sensu-go/types"
+	"github.com/sensu/sensu-plugin-sdk/sensu"
 )
 
 // Config holds configuration data for the handler
