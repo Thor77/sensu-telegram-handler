@@ -1,5 +1,7 @@
 # Sensu Go Telegram Handler
 
+**Looking for new maintainer(s)**. As I'm not using Sensu for my monitoring needs anymore I'll only provide security updates for this project.
+
 ## Installation
 
 ```
