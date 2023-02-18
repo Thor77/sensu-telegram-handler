@@ -6,7 +6,7 @@ import (
 	"text/template"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/sensu/sensu-go/types"
+	corev2 "github.com/sensu/core/v2"
 	"github.com/sensu/sensu-plugin-sdk/sensu"
 )
 
@@ -29,8 +29,8 @@ var config = Config{
 // handler options
 const defaultMessageTemplate = "*{{.Entity.Name}}/{{.Check.Name}}*: {{.Check.State}}\n`{{.Check.Output}}`"
 
-var options = []*sensu.PluginConfigOption{
-	{
+var options = []sensu.ConfigOption{
+	&sensu.PluginConfigOption[string]{
 		Path:      "api-token",
 		Argument:  "api-token",
 		Shorthand: "a",
@@ -38,7 +38,7 @@ var options = []*sensu.PluginConfigOption{
 		Usage:     "The API token to use when connecting to the Telegram service",
 		Value:     &config.APIToken,
 	},
-	{
+	&sensu.PluginConfigOption[int64]{
 		Path:      "chatid",
 		Argument:  "chatid",
 		Shorthand: "c",
@@ -46,7 +46,7 @@ var options = []*sensu.PluginConfigOption{
 		Usage:     "The Chat ID to use when connecting to the Telegram service",
 		Value:     &config.ChatID,
 	},
-	{
+	&sensu.PluginConfigOption[string]{
 		Path:      "template",
 		Argument:  "template",
 		Shorthand: "t",
@@ -57,11 +57,11 @@ var options = []*sensu.PluginConfigOption{
 }
 
 func main() {
-	telegramHandler := sensu.NewGoHandler(&config.PluginConfig, options, checkArgs, executeHandler)
+	telegramHandler := sensu.NewGoHandler(&config.PluginConfig, options, validateInput, executeHandler)
 	telegramHandler.Execute()
 }
 
-func checkArgs(_ *types.Event) error {
+func validateInput(_ *corev2.Event) error {
 	if config.APIToken == "" {
 		return errors.New("missing api token")
 	}
@@ -71,7 +71,7 @@ func checkArgs(_ *types.Event) error {
 	return nil
 }
 
-func executeHandler(event *types.Event) error {
+func executeHandler(event *corev2.Event) error {
 	// initialize bot
 	bot, err := tgbotapi.NewBotAPI(config.APIToken)
 	if err != nil {
